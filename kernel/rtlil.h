@@ -27,12 +27,12 @@ YOSYS_NAMESPACE_BEGIN
 namespace RTLIL
 {
 	enum State : unsigned char {
-		S0 = 0,
-		S1 = 1,
-		Sx = 2, // undefined value or conflict
-		Sz = 3, // high-impedance / not-connected
-		Sa = 4, // don't care (used only in cases)
-		Sm = 5  // marker (used internally by some passes)
+		S0 = 1<<0,
+		S1 = 1<<1,
+		Sx = 1<<2, // undefined value or conflict
+		Sz = 1<<3, // high-impedance / not-connected
+		Sa = 1<<4, // don't care (used only in cases)
+		Sm = 1<<5   // marker (used internally by some passes)
 	};
 
 	enum SyncType : unsigned char {

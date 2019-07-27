@@ -99,27 +99,19 @@ static RTLIL::Const big2const(const BigInteger &val, int result_len, int undef_b
 
 static RTLIL::State logic_and(RTLIL::State a, RTLIL::State b)
 {
-	if (a == RTLIL::State::S0) return RTLIL::State::S0;
-	if (b == RTLIL::State::S0) return RTLIL::State::S0;
-	if (a != RTLIL::State::S1) return RTLIL::State::Sx;
-	if (b != RTLIL::State::S1) return RTLIL::State::Sx;
-	return RTLIL::State::S1;
+	// If a or b is undefined and another is,
+	// cap this value to avoid an error
+	return std::min(static_cast<Yosys::RTLIL::State>(a && b), RTLIL::State::Sx);
 }
 
 static RTLIL::State logic_or(RTLIL::State a, RTLIL::State b)
 {
-	if (a == RTLIL::State::S1) return RTLIL::State::S1;
-	if (b == RTLIL::State::S1) return RTLIL::State::S1;
-	if (a != RTLIL::State::S0) return RTLIL::State::Sx;
-	if (b != RTLIL::State::S0) return RTLIL::State::Sx;
-	return RTLIL::State::S0;
+	return std::min(static_cast<Yosys::RTLIL::State>(a | b), RTLIL::State::Sx);
 }
 
 static RTLIL::State logic_xor(RTLIL::State a, RTLIL::State b)
 {
-	if (a != RTLIL::State::S0 && a != RTLIL::State::S1) return RTLIL::State::Sx;
-	if (b != RTLIL::State::S0 && b != RTLIL::State::S1) return RTLIL::State::Sx;
-	return a != b ? RTLIL::State::S1 : RTLIL::State::S0;
+	return std::min(static_cast<Yosys::RTLIL::State>(a ^ b), RTLIL::State::Sx);
 }
 
 static RTLIL::State logic_xnor(RTLIL::State a, RTLIL::State b)
